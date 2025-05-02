@@ -1,3 +1,5 @@
+--This file has been modified from the current version to return older functionality that allows for the use of qb-core.
+
 local QBCore = exports['qb-core']:GetCoreObject()
 local Inventory = require 'modules.inventory.client'
 local Weapon = require 'modules.weapon.client'
