@@ -162,23 +162,23 @@ function client.openInventory(inv, data)
     local left, right, accessError
 
     if inv == 'player' and data ~= cache.serverId then
-        local targetId, targetPed
+        local targetId, targetPed, serverId
 
         if not data then
             targetId, targetPed = Utils.GetClosestPlayer()
-            data = targetId and GetPlayerServerId(targetId)
+            serverId = targetId and GetPlayerServerId(targetId)
+            data = serverId
         else
-            local serverId = type(data) == 'table' and data.id or data
-
-            if serverId == cache.serverId then return end
-
+            serverId = type(data) == 'table' and data.id or data
             targetId = serverId and GetPlayerFromServerId(serverId)
             targetPed = targetId and GetPlayerPed(targetId)
         end
 
+        if serverId == cache.serverId then return end
+
         local targetCoords = targetPed and GetEntityCoords(targetPed)
 
-        if not targetCoords or #(targetCoords - GetEntityCoords(playerPed)) > 1.8 or not (client.hasGroup(shared.police) or canOpenTarget(targetPed)) then
+        if not targetCoords or #(targetCoords - GetEntityCoords(playerPed)) > 1.8 or not (client.hasGroup(shared.police) or not Player(serverId).state.canSteal) then
             return lib.notify({ id = 'inventory_right_access', type = 'error', description = locale('inventory_right_access') })
         end
     end
@@ -1019,9 +1019,10 @@ end)
 ---@param point CPoint
 local function nearbyDrop(point)
 	if not point.instance or point.instance == currentInstance then
-		---@diagnostic disable-next-line: param-type-mismatch
-		DrawMarker(2, point.coords.x, point.coords.y, point.coords.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3, 0.2, 0.15, 150, 30, 30, 222, false, false, 0, true, false, false, false)
-	end
+        DrawMarker(client.dropmarker.type, point.coords.x, point.coords.y, point.coords.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, client.dropmarker.scale[1], client.dropmarker.scale[2], client.dropmarker.scale[3],
+        ---@diagnostic disable-next-line: param-type-mismatch
+        client.dropmarker.colour[1], client.dropmarker.colour[2], client.dropmarker.colour[3], 222, false, false, 0, true, false, false, false)
+    end
 end
 
 ---@param point CPoint
@@ -1343,6 +1344,12 @@ RegisterNetEvent('ox_inventory:setPlayerInventory', function(currentDrops, inven
 	TriggerEvent('ox_inventory:updateInventory', PlayerData.inventory)
 
 	client.interval = SetInterval(function()
+        local canSteal = canOpenTarget(playerPed)
+
+        if canSteal ~= plyState.canSteal then
+            plyState:set('canSteal', canSteal, true)
+        end
+
 		if invOpen == false then
 			playerCoords = GetEntityCoords(playerPed)
 
@@ -1364,14 +1371,14 @@ RegisterNetEvent('ox_inventory:setPlayerInventory', function(currentDrops, inven
 						local ped = GetPlayerPed(id)
 						local pedCoords = GetEntityCoords(ped)
 
-						if not id or #(playerCoords - pedCoords) > maxDistance or not (client.hasGroup(shared.police) or canOpenTarget(ped)) then
+						if not id or #(playerCoords - pedCoords) > maxDistance or not (client.hasGroup(shared.police) or not Player(currentInventory.id).state.canSteal) then
 							client.closeInventory()
 							lib.notify({ id = 'inventory_lost_access', type = 'error', description = locale('inventory_lost_access') })
 						else
 							TaskTurnPedToFaceCoord(playerPed, pedCoords.x, pedCoords.y, pedCoords.z, 50)
 						end
 
-					elseif currentInventory.coords and (#(playerCoords - currentInventory.coords) > maxDistance or canOpenTarget(playerPed)) then
+					elseif currentInventory.coords and (#(playerCoords - currentInventory.coords) > maxDistance or canSteal) then
 						client.closeInventory()
 						lib.notify({ id = 'inventory_lost_access', type = 'error', description = locale('inventory_lost_access') })
 					end
