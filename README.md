@@ -1,8 +1,10 @@
 ## ⚠️ Notice
 
-This version of `ox_inventory` has been modified to enhance compatibility with the latest version of `qb-core`. It builds upon a previous QB-compatible fork originally maintained by [@JericoFX](https://github.com/JericoFX), incorporating further updates and functionality improvements.
+This version of `ox_inventory` has been modified to improve compatibility with the latest version of `qb-core`. It is based on a prior QB-compatible fork originally maintained by [@JericoFX](https://github.com/JericoFX), and includes additional updates and enhancements.
 
-Please note that this inventory system remains the property of the Overextended team and continues to comply with the terms of its original license. All modifications have been made with the goal of preserving core functionality while improving integration with the current `qb-core` framework.
+Please be aware that the original inventory system is the property of the Overextended team and remains under its original license. All changes in this version aim to retain core functionality while adapting it for modern `qb-core` environments.
+
+**Note:** The Overextended team does not provide support for `qb-core`, and this project has been archived. Please avoid contacting them regarding this modified version.
 
 # ox_inventory
 
