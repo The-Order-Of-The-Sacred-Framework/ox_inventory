@@ -1,3 +1,9 @@
+## ⚠️ Notice
+
+This version of `ox_inventory` has been modified to enhance compatibility with the latest version of `qb-core`. It builds upon a previous QB-compatible fork originally maintained by [@JericoFX](https://github.com/JericoFX), incorporating further updates and functionality improvements.
+
+Please note that this inventory system remains the property of the Overextended team and continues to comply with the terms of its original license. All modifications have been made with the goal of preserving core functionality while improving integration with the current `qb-core` framework.
+
 # ox_inventory
 
 A complete inventory system for FiveM, implementing items, weapons, shops, and more without any strict framework dependency.
