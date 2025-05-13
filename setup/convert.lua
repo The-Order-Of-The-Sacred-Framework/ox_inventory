@@ -195,7 +195,7 @@ local function Convert_Old_ESX_Property()
 	end
 	MySQL.prepare.await('INSERT INTO ox_inventory (owner,name,data) VALUES (?,?,?)', parameters)
 	Print('Successfully converted user property inventories')
-started = false
+	started = false
 end
 
 local function ConvertQB()
@@ -411,12 +411,6 @@ local function ConvertQB()
 	Print('Successfully converted user and vehicle inventories')
 	started = false
 end
-
-local function Convert_Old_ESX_Property()
-if started then
-return warn('Data is already being converted, please wait..')
-end
-
 
 return {
 	linden = Upgrade,
